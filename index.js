@@ -76,10 +76,10 @@ async function run() {
       res.send(result);
     });
     //delete a product data from the server
-    app.delete("/product/:id", async (req, res) => {
+    app.delete("/store/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result = await productCollection.deleteOne(query);
+      const result = await storeCollection.deleteOne(query);
       res.send(result);
     });
 
