@@ -83,7 +83,7 @@ async function run() {
       res.send(result);
     });
 
-    /////==============================================USER RELATED APIs=========================================================
+    /////=============USER RELATED APIs=====================
     //create new user
     app.post("/users", async (req, res) => {
       const newUser = req.body;
