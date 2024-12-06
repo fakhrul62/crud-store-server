@@ -57,22 +57,22 @@ async function run() {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
-      const updateProduct = req.body;
+      const updatedProduct = req.body;
       const product = {
         $set: {
-          name: updateProduct.name,
-          category: updateProduct.category,
-          price: updateProduct.price,
-          rating: updateProduct.rating,
-          customization: updateProduct.customization,
-          processing: updateProduct.processing,
-          user: updateProduct.user,
-          email: updateProduct.email,
-          photo: updateProduct.photo,
-          description: updateProduct.description,
+          name: updatedProduct.name,
+          category: updatedProduct.category,
+          price: updatedProduct.price,
+          rating: updatedProduct.rating,
+          customization: updatedProduct.customization,
+          processing: updatedProduct.processing,
+          user: updatedProduct.user,
+          email: updatedProduct.email,
+          photo: updatedProduct.photo,
+          description: updatedProduct.description,
         },
       };
-      const result = await userCollection.updateOne(filter, product, options);
+      const result = await storeCollection.updateOne(filter, product, options);
       res.send(result);
     });
     //delete a product data from the server
