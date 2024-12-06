@@ -1,4 +1,4 @@
-import { MongoClient, ServerApiVersion } from 'mongodb';
+import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
@@ -20,7 +20,7 @@ const client = new MongoClient(uri, {
     version: ServerApiVersion.v1,
     strict: true,
     deprecationErrors: true,
-  }
+  },
 });
 
 async function run() {
@@ -32,22 +32,29 @@ async function run() {
     const storeCollection = client.db("storeDB").collection("store");
     const userCollection = client.db("storeDB").collection("users");
 
-    // posting it to the server
+    // posting a product to the server
     app.post("/store", async (req, res) => {
       const newProduct = req.body;
       console.log(newProduct);
       const result = await storeCollection.insertOne(newProduct);
       res.send(result);
     });
-    //getting data from the server
+    //getting products from the server
     app.get("/store", async (req, res) => {
       const cursor = storeCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
+    //get a product data in the server
+    app.get("/store/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await storeCollection.findOne(query);
+      res.send(result);
+    });
+    
 
-
-        /////==============================================USER RELATED APIs=========================================================
+    /////==============================================USER RELATED APIs=========================================================
     //create new user
     app.post("/users", async (req, res) => {
       const newUser = req.body;
@@ -69,20 +76,20 @@ async function run() {
       res.send(result);
     });
     //update a data in the server
-      app.put("/user/:id", async (req, res) => {
-        const id = req.params.id;
-        const filter = { _id: new ObjectId(id) };
-        const options = { upsert: true };
-        const updateUser = req.body;
-        const user = {
-          $set: {
-            email: updateUser.email,
-            password: updateUser.password,
-          },
-        };
-        const result = await userCollection.updateOne(filter, user, options);
-        res.send(result);
-      });
+    app.put("/user/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateUser = req.body;
+      const user = {
+        $set: {
+          email: updateUser.email,
+          password: updateUser.password,
+        },
+      };
+      const result = await userCollection.updateOne(filter, user, options);
+      res.send(result);
+    });
     //delete a data from the server
     app.delete("/user/:id", async (req, res) => {
       const id = req.params.id;
@@ -93,11 +100,11 @@ async function run() {
     //patch
     app.patch("/user", async (req, res) => {
       const email = req.body.email;
-      const filter = {email};
+      const filter = { email };
       const updateDoc = {
         $set: {
-          lastSignInTime: req?.body?.lastSignInTime
-        }
+          lastSignInTime: req?.body?.lastSignInTime,
+        },
       };
       const result = await userCollection.updateOne(filter, updateDoc);
       res.send(result);
@@ -105,7 +112,9 @@ async function run() {
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to StoreDB!");
+    console.log(
+      "Pinged your deployment. You successfully connected to StoreDB!"
+    );
   } finally {
     // Ensures that the client will close when you finish/error
     //await client.close();
@@ -115,13 +124,10 @@ run().catch(console.dir);
 
 //MONGO DB
 
-
-
 app.get("/", (req, res) => {
-    res.send("CRUD Store is running...");
-  });
-  
-  app.listen(port, () => {
-    console.log(`CRUD Store is running on port: ${port}`);
-  });
-  
+  res.send("CRUD Store is running...");
+});
+
+app.listen(port, () => {
+  console.log(`CRUD Store is running on port: ${port}`);
+});
