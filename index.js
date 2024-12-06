@@ -75,7 +75,13 @@ async function run() {
       const result = await userCollection.updateOne(filter, product, options);
       res.send(result);
     });
-    
+    //delete a product data from the server
+    app.delete("/product/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await productCollection.deleteOne(query);
+      res.send(result);
+    });
 
     /////==============================================USER RELATED APIs=========================================================
     //create new user
