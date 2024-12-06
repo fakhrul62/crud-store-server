@@ -52,6 +52,29 @@ async function run() {
       const result = await storeCollection.findOne(query);
       res.send(result);
     });
+    //update a product in the server
+    app.put("/store/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateProduct = req.body;
+      const product = {
+        $set: {
+          name: updateProduct.name,
+          category: updateProduct.category,
+          price: updateProduct.price,
+          rating: updateProduct.rating,
+          customization: updateProduct.customization,
+          processing: updateProduct.processing,
+          user: updateProduct.user,
+          email: updateProduct.email,
+          photo: updateProduct.photo,
+          description: updateProduct.description,
+        },
+      };
+      const result = await userCollection.updateOne(filter, product, options);
+      res.send(result);
+    });
     
 
     /////==============================================USER RELATED APIs=========================================================
