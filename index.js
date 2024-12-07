@@ -66,6 +66,7 @@ async function run() {
           rating: updatedProduct.rating,
           customization: updatedProduct.customization,
           processing: updatedProduct.processing,
+          stock: updatedProduct.stock,
           user: updatedProduct.user,
           email: updatedProduct.email,
           photo: updatedProduct.photo,
